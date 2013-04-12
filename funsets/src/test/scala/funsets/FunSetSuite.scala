@@ -86,7 +86,7 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
@@ -101,12 +101,67 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+  
+  test("intersect contains common elements") {
+    new TestSets {
+      val s = intersect(union(s1, s2), s2)
+      assert(!contains(s, 1), "intersect 1")
+      assert(contains(s, 2), "intersect 2")
+      assert(!contains(s, 3), "intersect 3")
+    }
+  }
+  
+  test("diff is a - b") {
+    new TestSets {
+      val s = diff(union(s1, s2), s2)
+      assert(contains(s, 1), "diff 1")
+      assert(!contains(s, 2), "diff 2")
+      assert(!contains(s, 3), "diff 3")
+    }
+  }
+  
+  test("filter contains elements that pass") {
+    new TestSets {
+      val s = filter(union(s1, union(s2, s3)), (i: Int) => i<2)
+      assert(contains(s, 1), "filter 1")
+      assert(!contains(s, 2), "filter 2")
+      assert(!contains(s, 3), "filter 3")
+    }
+  }
+  
+  test("forall is all elements pass") {
+    new TestSets {
+      val s = union(s1, union(s2, s3))
+      assert(!forall(s, (i: Int) => i<2), "forall <2")
+      assert(!forall(s, (i: Int) => i>2), "forall >2")
+      assert(forall(s, (i: Int) => i<5), "forall <5")
+    }
+  }
+  
+  test("exists is any elements pass") {
+    new TestSets {
+      val s = union(s1, union(s2, s3))
+      assert(exists(s, (i: Int) => i > -3), "exists >-3")
+      assert(exists(s, (i: Int) => i == 1), "exists ==1")
+      assert(!exists(s, (i: Int) => i > 5), "exists >5")
+    }
+  }
+  
+  test("map contains all elements of s after applying f") {
+    new TestSets {
+      val s = union(s1, union(s2, s3))
+      val mpd = map(s, (x: Int) => x*x*x*x)
+      assert(contains(mpd, 81), "map contains 81")
+      assert(!contains(mpd, 82), "map contains 81")
+      assert(!contains(mpd, 0), "map contains 0")
     }
   }
 }
