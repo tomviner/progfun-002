@@ -26,6 +26,14 @@ class TweetSetSuite extends FunSuite {
 
   def size(set: TweetSet): Int = asSet(set).size
 
+  def TLasSet(tweets: TweetList): Set[Tweet] = {
+    var res = Set[Tweet]()
+    tweets.foreach(res += _)
+    res
+  }
+
+  def TLsize(set: TweetList): Int = TLasSet(set).size
+
   test("filter: on empty set") {
     new TestSets {
       assert(size(set1.filter(tw => tw.user == "a")) === 0)
@@ -62,11 +70,38 @@ class TweetSetSuite extends FunSuite {
     }
   }
 
+  test("max: of 2 tweets") {
+    new TestSets {
+      val t1=new Tweet("a", "a body", 20)
+      val t2=new Tweet("b", "b body", 2)
+      assert(Helper.max(t1, t2).retweets === 20)
+    }
+  }
+
+  test("mostRetweeted: empty") {
+    new TestSets {
+      assert(set1.mostRetweetedAcc(new Tweet("b", "b body", 2)).retweets === 2)
+    }
+  }
+
+  test("mostRetweeted:") {
+    new TestSets {
+      assert(set5.mostRetweeted.retweets === 20)
+    }
+  }
+
   test("descending: set5") {
     new TestSets {
       val trends = set5.descendingByRetweet
       assert(!trends.isEmpty)
       assert(trends.head.user == "a" || trends.head.user == "b")
+    }
+  }
+
+  test("GoogleVsApple trending: googles") {
+    new TestSets {
+      val top = GoogleVsApple.trending.head
+      println(TLsize(GoogleVsApple.trending))
     }
   }
 }
