@@ -1,9 +1,16 @@
 *.class
 *.log
+*.cache
+*.classpath
+*.project
+*.settings
+*.sublime-*
 
 # sbt specific
+build.sbt
 dist/*
 target/
+project/
 lib_managed/
 src_managed/
 project/boot/
