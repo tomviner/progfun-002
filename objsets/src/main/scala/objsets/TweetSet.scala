@@ -42,7 +42,7 @@ abstract class TweetSet {
    * Question: Can we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-  def filter(p: Tweet => Boolean): TweetSet = ???
+  def filter(p: Tweet => Boolean): TweetSet
 
   /**
    * This is a helper method for `filter` that propagetes the accumulated tweets.
@@ -55,7 +55,7 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-   def union(that: TweetSet): TweetSet = ???
+   def union(that: TweetSet): TweetSet
 
   /**
    * Returns the tweet from this set which has the greatest retweet count.
@@ -110,8 +110,14 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
 
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = ???
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet =
+    acc
 
+  def filter(p: Tweet => Boolean): TweetSet =
+    filterAcc(p, this)
+
+  def union(that: TweetSet): TweetSet =
+    that
 
   /**
    * The following methods are already implemented
@@ -128,8 +134,16 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = ???
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
+      val a = if (p(elem)) acc.incl(elem) else acc
+      left.filterAcc(p, right.filterAcc(p, a))
+  }
 
+  def filter(p: Tweet => Boolean): TweetSet =
+    filterAcc(p, new Empty)
+
+  def union(that: TweetSet): TweetSet =
+    left union right union that incl elem
 
   /**
    * The following methods are already implemented
