@@ -4,7 +4,7 @@
 *.classpath
 *.project
 *.settings
-*.sublime-*
+package.scala
 
 # sbt specific
 build.sbt
@@ -18,3 +18,4 @@ project/plugins/project/
 
 # Scala-IDE specific
 .scala_dependencies
+*.sublime-*
