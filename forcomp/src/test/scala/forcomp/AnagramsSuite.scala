@@ -56,6 +56,17 @@ class AnagramsSuite extends FunSuite {
     assert(subtract(tested, scrabble) === answer)
   }
 
+  test("subtract: something - nothing") {
+    val something = wordOccurrences("something")
+    val nothing = wordOccurrences("")
+    assert(subtract(something, nothing) === something)
+  }
+
+  test("subtract: nothing - nothing") {
+    val nothing = wordOccurrences("")
+    assert(subtract(nothing, nothing) === nothing)
+  }
+
 
   test("combinations: []") {
     assert(combinations(Nil) === List(Nil))
@@ -93,36 +104,72 @@ class AnagramsSuite extends FunSuite {
   }
 
 
-  // test("sentence anagrams: []") {
-  //   val sentence = List()
-  //   assert(sentenceAnagrams(sentence) === List(Nil))
-  // }
+  test("sentence anagrams: []") {
+    val sentence = List()
+    assert(sentenceAnagrams(sentence) === List(Nil))
+  }
 
-  // test("sentence anagrams: Linux rulez") {
-  //   val sentence = List("Linux", "rulez")
-  //   val anas = List(
-  //     List("Rex", "Lin", "Zulu"),
-  //     List("nil", "Zulu", "Rex"),
-  //     List("Rex", "nil", "Zulu"),
-  //     List("Zulu", "Rex", "Lin"),
-  //     List("null", "Uzi", "Rex"),
-  //     List("Rex", "Zulu", "Lin"),
-  //     List("Uzi", "null", "Rex"),
-  //     List("Rex", "null", "Uzi"),
-  //     List("null", "Rex", "Uzi"),
-  //     List("Lin", "Rex", "Zulu"),
-  //     List("nil", "Rex", "Zulu"),
-  //     List("Rex", "Uzi", "null"),
-  //     List("Rex", "Zulu", "nil"),
-  //     List("Zulu", "Rex", "nil"),
-  //     List("Zulu", "Lin", "Rex"),
-  //     List("Lin", "Zulu", "Rex"),
-  //     List("Uzi", "Rex", "null"),
-  //     List("Zulu", "nil", "Rex"),
-  //     List("rulez", "Linux"),
-  //     List("Linux", "rulez")
-  //   )
-  //   assert(sentenceAnagrams(sentence).toSet === anas.toSet)
-  // }
+  test("sentence anagrams: 1 word test") {
+    val sentence = List("zo")
+    val anas = List(
+      List("Oz")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
+  test("sentence anagrams: 2 word test") {
+    val sentence = List("de")
+    val anas = List(
+      List("Ed"),
+      List("De")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
+  test("sentence anagrams: 3 word test") {
+    val sentence = List("ghu")
+    val anas = List(
+      List("hug"),
+      List("ugh")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
+  test("sentence anagrams: multi word results test") {
+    val sentence = List("eten")
+    val anas = List(
+      List("et", "en"),
+      List("en", "et"),
+      List("teen")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
+  test("sentence anagrams: Linux rulez") {
+    val sentence = List("Linux", "rulez")
+    val anas = List(
+      List("Rex", "Lin", "Zulu"),
+      List("nil", "Zulu", "Rex"),
+      List("Rex", "nil", "Zulu"),
+      List("Zulu", "Rex", "Lin"),
+      List("null", "Uzi", "Rex"),
+      List("Rex", "Zulu", "Lin"),
+      List("Uzi", "null", "Rex"),
+      List("Rex", "null", "Uzi"),
+      List("null", "Rex", "Uzi"),
+      List("Lin", "Rex", "Zulu"),
+      List("nil", "Rex", "Zulu"),
+      List("Rex", "Uzi", "null"),
+      List("Rex", "Zulu", "nil"),
+      List("Zulu", "Rex", "nil"),
+      List("Zulu", "Lin", "Rex"),
+      List("Lin", "Zulu", "Rex"),
+      List("Uzi", "Rex", "null"),
+      List("Zulu", "nil", "Rex"),
+      List("rulez", "Linux"),
+      List("Linux", "rulez")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
 
 }

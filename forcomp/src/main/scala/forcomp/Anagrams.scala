@@ -35,10 +35,10 @@ object Anagrams {
    */
   def wordOccurrences(w: Word): Occurrences = {
     val l = w.toLowerCase.toList
-    l.groupBy(c => c)
+    l.groupBy(identity)
+      .mapValues(ns => ns.length)
       .toList
-      .map(ch_int => (ch_int._1, ch_int._2.length))
-      .sortBy(identity)
+      .sorted
   }
 
 
@@ -63,7 +63,9 @@ object Anagrams {
    *
    */
   lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] =
-    dictionary.groupBy(wordOccurrences)
+    dictionary
+      .groupBy(wordOccurrences)
+      .withDefaultValue(List())
 
 
   /** Returns all the anagrams of a given word. */
@@ -120,15 +122,12 @@ object Anagrams {
    */
 
   def subtract(x: Occurrences, y: Occurrences): Occurrences =
-    if (y.isEmpty) x
-    else {
-      for {
-        (chx, nx) <- x
-        yn = y.toMap.getOrElse(chx, 0)
-        n = nx - yn
-        if n > 0
-      } yield (chx, n)
-    }
+    for {
+      (chx, nx) <- x
+      yn = y.foldLeft(0)((a, by) => a + (if (by._1 == chx) by._2 else 0))
+      n = nx - yn
+      if n > 0
+    } yield (chx, n)
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
@@ -170,6 +169,23 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def senFromOccs(occurrences: Occurrences): List[Sentence] = {
+      occurrences match {
+        case Nil => List(Nil)
+        case _ => {
+          // dictionaryByOccurrences: Map[Occurrences, List[Word]]
+          // List(('a', 1), ('e', 1), ('t', 1)) -> Seq("ate", "eat", "tea")
+          for {
+            occs <- combinations(occurrences)
+            word <- dictionaryByOccurrences(occs)
+            restOfSentence <- senFromOccs(subtract(occurrences, wordOccurrences(word)))
+          } yield word :: restOfSentence
+        }
+      }
+    }
+    senFromOccs(sentenceOccurrences(sentence))
+  }
+
 
 }
