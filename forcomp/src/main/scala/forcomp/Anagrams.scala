@@ -70,6 +70,20 @@ object Anagrams {
   def wordAnagrams(word: Word): List[Word] =
     dictionaryByOccurrences.getOrElse(wordOccurrences(word), List())
 
+
+  def addn(l: Occurrences, ch: Char, n: Int): Occurrences = {
+    val m = l.toMap.getOrElse(ch, 0)
+    l.toMap.updated(ch, m+n).toList.sortBy(identity).filter(pair => pair._2 > 0)
+  }
+
+  def inc(l: Occurrences, ch: Char): Occurrences = {
+    addn(l, ch, 1)
+  }
+
+  def dec(l: Occurrences, ch: Char): Occurrences = {
+    addn(l, ch, -1)
+  }
+
   /** Returns the list of all subsets of the occurrence list.
    *  This includes the occurrence itself, i.e. `List(('k', 1), ('o', 1))`
    *  is a subset of `List(('k', 1), ('o', 1))`.
@@ -93,37 +107,19 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
 
-  def addn(l: Occurrences, ch: Char, n: Int): Occurrences = {
-    val m = l.toMap.getOrElse(ch, 0)
-    l.toMap.updated(ch, m+n).toList.sortBy(identity).filter(pair => pair._2 > 0)
-  }
-
-  def inc(l: Occurrences, ch: Char): Occurrences = {
-    addn(l, ch, 1)
-  }
-
-  def dec(l: Occurrences, ch: Char): Occurrences = {
-    addn(l, ch, -1)
-  }
-
-
-  def comAcc(occurrences: Occurrences, acc: List[Occurrences]): List[Occurrences] =
-    if (occurrences.isEmpty) acc
-    else {
-      val (ch, n) = occurrences.head
-      val new_acc = acc.map(occ => {
-          // inc one ch
-          // and also don't
-          List(
-            inc(occ, ch),
-            occ
-          )
-        }).flatten
-      comAcc(dec(List((ch, n)), ch) ::: occurrences.tail, new_acc)
-    }
 
   def combinations(occurrences: Occurrences): List[Occurrences] =
-    comAcc(occurrences, List(List()))
+    occurrences match {
+      case Nil => List(Nil)
+      case (ch, n) :: tail => {
+        for {
+          i <- (1 to n)
+          rest <- combinations(tail)
+        } yield (ch, i) :: rest
+      }.toList ::: combinations(tail)
+    }
+
+
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
