@@ -49,6 +49,12 @@ class AnagramsSuite extends FunSuite {
     assert(subtract(lard, r) === lad)
   }
 
+  test("subtract: tested - scrabble") {
+    val tested = wordOccurrences("tested")
+    val scrabble = wordOccurrences("scrabble")
+    val answer = wordOccurrences("tted")
+    assert(subtract(tested, scrabble) === answer)
+  }
 
 
   test("combinations: []") {
@@ -72,8 +78,8 @@ class AnagramsSuite extends FunSuite {
   }
 
   test("combinations: abz") {
-    val abba = List(('a', 1), ('b', 1), ('z', 1))
-    val abbacomb = List(
+    val abz = List(('a', 1), ('b', 1), ('z', 1))
+    val abzcomb = List(
       List(('a',1), ('b',1), ('z',1)),
       List(('a',1), ('b',1)),
       List(('a',1), ('z',1)),
@@ -83,7 +89,7 @@ class AnagramsSuite extends FunSuite {
       List(('z',1)),
       List()
     )
-    assert(combinations(abba).toSet === abbacomb.toSet)
+    assert(combinations(abz).toSet === abzcomb.toSet)
   }
 
 

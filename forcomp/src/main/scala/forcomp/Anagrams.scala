@@ -71,19 +71,6 @@ object Anagrams {
     dictionaryByOccurrences.getOrElse(wordOccurrences(word), List())
 
 
-  def addn(l: Occurrences, ch: Char, n: Int): Occurrences = {
-    val m = l.toMap.getOrElse(ch, 0)
-    l.toMap.updated(ch, m+n).toList.sortBy(identity).filter(pair => pair._2 > 0)
-  }
-
-  def inc(l: Occurrences, ch: Char): Occurrences = {
-    addn(l, ch, 1)
-  }
-
-  def dec(l: Occurrences, ch: Char): Occurrences = {
-    addn(l, ch, -1)
-  }
-
   /** Returns the list of all subsets of the occurrence list.
    *  This includes the occurrence itself, i.e. `List(('k', 1), ('o', 1))`
    *  is a subset of `List(('k', 1), ('o', 1))`.
@@ -131,13 +118,17 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
+
   def subtract(x: Occurrences, y: Occurrences): Occurrences =
     if (y.isEmpty) x
     else {
-      val (ch, n) = y.head
-      subtract(addn(x, ch, -n), addn(y, ch, -n))
+      for {
+        (chx, nx) <- x
+        yn = y.toMap.getOrElse(chx, 0)
+        n = nx - yn
+        if n > 0
+      } yield (chx, n)
     }
-
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
