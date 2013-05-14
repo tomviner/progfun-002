@@ -31,10 +31,13 @@ trait Solver extends GameDef {
    * that are inside the terrain.
    */
   def neighborsWithHistory(b: Block, history: List[Move]): Stream[(Block, List[Move])] =
-    (for {
-      (bl, mv) <- b.legalNeighbors
-    } yield (bl, mv :: history)
-    ).toStream
+    // (for {
+    //   (bl, mv) <- b.legalNeighbors
+    // } yield (bl, mv :: history)
+    // ).toStream
+    b.legalNeighbors
+      .map{case (bl, mv) => (bl, mv :: history)}
+      .toStream
 
   /**
    * This function returns the list of neighbors without the block
@@ -43,7 +46,7 @@ trait Solver extends GameDef {
    */
   def newNeighborsOnly(neighbors: Stream[(Block, List[Move])],
                        explored: Set[Block]): Stream[(Block, List[Move])] =
-    neighbors.filter({case (b, mvs) => !explored.contains(b)})
+    neighbors.filterNot{case (b, mvs) => explored.contains(b)}
 
   /**
    * The function `from` returns the stream of all possible paths
@@ -74,7 +77,8 @@ trait Solver extends GameDef {
     else {
       val more = for {
         (in_b, in_mvs) <- initial
-        next <- newNeighborsOnly(neighborsWithHistory(in_b, in_mvs), explored + in_b)
+        neighbors = neighborsWithHistory(in_b, in_mvs)
+        next <- newNeighborsOnly(neighbors, explored)
       } yield next
       initial #::: from(more, explored ++ more.map(_._1))
     }
@@ -92,7 +96,7 @@ trait Solver extends GameDef {
    * with the history how it was reached.
    */
   lazy val pathsToGoal: Stream[(Block, List[Move])] =
-    pathsFromStart.filter({case (b, mvs) => b == Block(goal, goal)})
+    pathsFromStart filter{case (b, mvs) => b == Block(goal, goal)}
 
 
   /**
@@ -104,8 +108,11 @@ trait Solver extends GameDef {
    * position.
    */
   lazy val solution: List[Move] =
+    // if (pathsToGoal.isEmpty) Nil
+    // else pathsToGoal.head._2.reverse
     pathsToGoal match {
       case Stream.Empty => Nil
+      // apparantly this blows up the tail?
       case (b, mvs) #:: tail => mvs.reverse
     }
 

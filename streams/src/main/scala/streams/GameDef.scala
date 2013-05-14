@@ -85,7 +85,10 @@ trait GameDef {
    * the game.
    */
   def startBlock: Block =
-    Block(Pos(startPos.x, startPos.y), Pos(startPos.x, startPos.y))
+    Block(
+      Pos(startPos.x, startPos.y),
+      Pos(startPos.x, startPos.y)
+    )
 
 
   /**
@@ -149,7 +152,7 @@ trait GameDef {
      * which are inside the terrain.
      */
     def legalNeighbors: List[(Block, Move)] =
-      neighbors.filter({case (bl, mv) => bl.isLegal})
+      neighbors.filter{case (bl, mv) => bl.isLegal}
 
     /**
      * Returns `true` if the block is standing.

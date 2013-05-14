@@ -38,6 +38,21 @@ class BloxorzSuite extends FunSuite {
 
     val optsolution = List(Down, Right, Up)
   }
+  test("optimal solution for level 0") {
+    new Level0 {
+      assert(solve(solution) === Block(goal, goal))
+    }
+  }
+    test("solution for level 0") {
+    new Level0 {
+      assert(solution === optsolution)
+    }
+  }
+  test("optimal solution length for level 0") {
+    new Level0 {
+      assert(solution.length === optsolution.length)
+    }
+  }
 
   trait Level1 extends SolutionChecker {
       /* terrain for level 1*/
@@ -52,6 +67,97 @@ class BloxorzSuite extends FunSuite {
 
     val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
   }
+
+
+  trait Level6 extends SolutionChecker {
+      /*terrain for level 6*/
+
+    val level =
+    """-----oooooo
+      |-----o--ooo
+      |-----o--ooooo
+      |Sooooo-----oooo
+      |----ooo----ooTo
+      |----ooo-----ooo
+      |------o--oo
+      |------ooooo
+      |------ooooo
+      |-------ooo""".stripMargin
+
+    val optsolution = List(Right, Right, Right, Down, Right, Down, Down, Right, Down, Down, Right, Up, Left, Left, Left, Up, Up, Left, Up, Up, Up, Right, Right, Right, Down, Down, Left, Up, Right, Right, Down, Right, Down, Down, Right)
+  }
+  test("optimal solution for level 6") {
+    new Level6 {
+      assert(solve(solution) === Block(goal, goal))
+    }
+  }
+  test("solution for level 6") {
+    new Level6 {
+      assert(solution === optsolution)
+    }
+  }
+  test("optimal solution length for level 6") {
+    new Level6 {
+      assert(solution.length === optsolution.length)
+    }
+  }
+
+
+  trait Level11 extends SolutionChecker {
+      /*terrain for level 11*/
+
+    val level =
+    """-oooo
+      |-oToo
+      |-ooo
+      |-o---oooooo
+      |-o---oo--oo
+      |Soooooo--ooo
+      |-----o-----o
+      |-----oooo--o
+      |-----ooooooo
+      |--------ooo
+    """.stripMargin
+
+    val optsolution = List(Right, Right, Right, Right, Up, Left, Down, Down, Down, Right, Right, Right, Down, Left, Up, Left, Left, Left, Up, Up, Right, Up, Right, Right, Down, Right, Up, Left, Left, Left, Down, Down, Left, Left, Left, Up, Up, Right, Up, Up, Left, Down, Right, Up, Right, Down, Left)
+  }
+  test("optimal solution for level 11") {
+    new Level11 {
+      assert(solve(solution) === Block(goal, goal))
+    }
+  }
+  test("solution for level 11") {
+    new Level11 {
+      assert(solution === optsolution)
+    }
+  }
+  test("optimal solution length for level 11") {
+    new Level11 {
+      assert(solution.length === optsolution.length)
+    }
+  }
+
+
+  // trait LevelX extends SolutionChecker {
+  //      terrain for level X
+
+  //   val level =
+  //   "".stripMargin
+
+  //   val optsolution = List()
+  // }
+  // test("optimal solution for level X") {
+  //   new LevelX {
+  //     assert(solve(solution) === Block(goal, goal))
+  //   }
+  // }
+  // test("optimal solution length for level X") {
+  //   new LevelX {
+  //     assert(solution.length === optsolution.length)
+  //   }
+  // }
+
+
 
   test("terrain function level 1") {
     new Level1 {
@@ -156,7 +262,6 @@ class BloxorzSuite extends FunSuite {
       assert(solve(solution) === Block(goal, goal))
     }
   }
-
   test("optimal solution length for level 1") {
     new Level1 {
       assert(solution.length === optsolution.length)
