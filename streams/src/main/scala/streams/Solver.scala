@@ -96,7 +96,7 @@ trait Solver extends GameDef {
    * with the history how it was reached.
    */
   lazy val pathsToGoal: Stream[(Block, List[Move])] =
-    pathsFromStart filter{case (b, mvs) => b == Block(goal, goal)}
+    pathsFromStart filter{case (b, mvs) => done(b)}
 
 
   /**
@@ -108,11 +108,8 @@ trait Solver extends GameDef {
    * position.
    */
   lazy val solution: List[Move] =
-    // if (pathsToGoal.isEmpty) Nil
-    // else pathsToGoal.head._2.reverse
     pathsToGoal match {
       case Stream.Empty => Nil
-      // apparantly this blows up the tail?
       case (b, mvs) #:: tail => mvs.reverse
     }
 
